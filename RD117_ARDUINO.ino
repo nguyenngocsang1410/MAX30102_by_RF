@@ -143,7 +143,7 @@ void setup() {
   dataFile.println(measuredvbat);
   dataFile.println(my_status);
 #ifdef TEST_MAXIM_ALGORITHM
-  dataFile.print(F("Time[s]\tSpO2\tHR\tSpO2_MX\tHR_MX\tClock\tRatio\tCorr\tTemp[C]”));
+  dataFile.print(F("Time[s]\tSpO2\tHR\tSpO2_MX\tHR_MX\tClock\tRatio\tCorr\tTemp[C]"));
 #else // TEST_MAXIM_ALGORITHM
   dataFile.print(F("Time[s]\tSpO2\tHR\tClock\tRatio\tCorr\tTemp[C]"));
 #endif // TEST_MAXIM_ALGORITHM
@@ -205,7 +205,7 @@ void loop() {
   char hr_str[10];
      
   //buffer length of BUFFER_SIZE stores ST seconds of samples running at FS sps
-  //read BUFFER_SIZE samples, and determine the signal range
+  //read BUFFER_SIZE number of samples, and determine the signal range
   for(i=0;i<BUFFER_SIZE;i++)
   {
     while(digitalRead(oxiInt)==1);  //wait until the interrupt pin asserts
@@ -268,10 +268,11 @@ void loop() {
 
   //save samples and calculation result to SD card
 #ifdef TEST_MAXIM_ALGORITHM
-  if(ch_hr_valid && ch_spo2_valid || ch_hr_valid_maxim && ch_spo2_valid_maxim) {
+  // if(ch_hr_valid && ch_spo2_valid || ch_hr_valid_maxim && ch_spo2_valid_maxim) {
 #else   // TEST_MAXIM_ALGORITHM
-  if(ch_hr_valid && ch_spo2_valid) { 
+  // if(ch_hr_valid && ch_spo2_valid) { 
 #endif // TEST_MAXIM_ALGORITHM
+
 #ifdef USE_ADALOGGER
     ++k;
     dataFile.print(elapsedTime);
@@ -300,6 +301,7 @@ void loop() {
       dataFile.print(F("\t"));
       dataFile.print(aun_red_buffer[i], DEC);
     }
+    
     for(i=0;i<BUFFER_SIZE;++i)
     {
       dataFile.print(F("\t"));
@@ -352,7 +354,6 @@ void loop() {
     Serial.println("");
 #endif // USE_ADALOGGER
     old_n_spo2=n_spo2;
-  }
 }
 
 void millis_to_hours(uint32_t ms, char* hr_str)
